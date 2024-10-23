@@ -8,7 +8,7 @@ In the following project, I largely copied the code of @TapTap_196 on youtube. T
 
 ## Screenshots
 
-![App Screenshot]src/main/AppScreenshot.png
+![App Screenshot](src/main/AppScreenshot.png)
 
 ## Run Locally
 
