@@ -149,9 +149,9 @@ public class BackEnd
 	
 	private static String getCurrentTime()
 	{
-		LocalDateTime currenDateTime = LocalDateTime.now();
+		LocalDateTime currentDateTime = LocalDateTime.now();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:00");
-		String formattedDateTime = currenDateTime.format(formatter);
+		String formattedDateTime = currentDateTime.format(formatter);
 		return formattedDateTime;
 	}
 	

@@ -71,12 +71,12 @@ public class AppGui extends JFrame
 		humidityText.setFont(new Font("Dialog", Font.PLAIN, 16));
 		this.add(humidityText);
 		
-		// windspeed image
+		// wind speed image
 		JLabel windspeedImage = new JLabel(loadImageIcon("./src/main/resources/windspeed.png"));
 		windspeedImage.setBounds(220, 500, 74, 66);
 		this.add(windspeedImage);
 		
-		// windspeed text
+		// wind speed text
 		JLabel windspeedText = new JLabel("<html><b>Windspeed</b> 15Km/h</html>");
 		windspeedText.setBounds(310, 500, 85, 55);
 		windspeedText.setFont(new Font("Dialog", Font.PLAIN, 16));
