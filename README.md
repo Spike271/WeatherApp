@@ -5,9 +5,6 @@
 </div>
 
 <h1 align="center">Weather App</h1>
-<p align="center">
-    <a href="https://github.com/Spike271/WeatherApp/releases/tag/v1.0"></a>
-</p>
 
 ## Description
 This Weather App is yet another generic app which Javascript developers make in their learning stage so the difference here is I use Java to make this app.
@@ -18,7 +15,7 @@ In the following project, I largely copied the code of @TapTap_196 on youtube. T
 
 ## Screenshots
 
-![App Screenshot] src/main/AppScreenshot.png
+![app screenshot](src/main/AppScreenshot.png "Weather app")
 
 ## Installation
 
