@@ -9,7 +9,8 @@ public class MainApp
 		{
 			if (BackEnd.CheckInternet() != true)
 			{
-				int temp = JOptionPane.showOptionDialog(null, "No Internet\nClick yes to try again", "Error 404",
+				int temp = JOptionPane.showOptionDialog(null,
+						"You aren't connected to the Internet\nClick yes to try again", "Error 404",
 						JOptionPane.OK_OPTION, 2, null, null, 1);
 				
 				if (temp != 0)
