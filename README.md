@@ -1,5 +1,15 @@
-# Weather App
+<div align="center">
+  <a href="https://github.com/Spike271/WeatherApp" target="_blank">
+    <img width="180" src="src/main/resources/img/cloudy.png" alt="Weather app logo">
+  </a>  
+</div>
 
+<h1 align="center">Weather App</h1>
+<p align="center">
+    <a href="https://github.com/Spike271/WeatherApp/releases/tag/v1.0"></a>
+</p>
+
+## Description
 This Weather App is yet another generic app which Javascript developers make in their learning stage so the difference here is I use Java to make this app.
 
 
@@ -8,34 +18,20 @@ In the following project, I largely copied the code of @TapTap_196 on youtube. T
 
 ## Screenshots
 
-![App Screenshot](src/main/AppScreenshot.png)
+![App Screenshot]src/main/AppScreenshot.png
 
-## Run Locally
+## Installation
 
 ### Requirements
 
-- JDK 22 or above version
+- Make sure you have JDK 22 or above version installed on your local machine.
 
-Clone the project
+In order to run the app
 
-```bash
-  git clone https://github.com/Spike271/WeatherApp.git
-```
+* Go to the github releases section [GitHub Releases](https://github.com/Spike271/WeatherApp/releases) 
 
-Go to the project directory
+* Just grab the zip, extract it and run the Weather app.jar file.
 
-```bash
-  cd src/main/java
-```
+* You can put the file(zip file) in any directory you want.
 
-Set the classpath
-
-```bash
-set classpath=../resources/json-simple-1.1.1.jar;.
-```
-
-Run the Main File
-
-```bash
-  java Main.java
-```
+    
