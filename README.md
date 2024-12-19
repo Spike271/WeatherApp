@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://github.com/Spike271/WeatherApp" target="_blank">
-    <img width="180" src="src/main/resources/img/cloudy.png" alt="Weather app logo">
+    <img width="180" src="resources/img/cloudy.png" alt="Weather app logo">
   </a>  
 </div>
 
