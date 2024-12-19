@@ -174,7 +174,7 @@ public class BackEnd
 		return weatherCondition;
 	}
 	
-	public static boolean CheckInternet()
+	public static boolean checkInternet()
 	{
 		boolean check = false;
 		try
@@ -189,4 +189,5 @@ public class BackEnd
 		{}
 		return check;
 	}
+	
 }

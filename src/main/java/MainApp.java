@@ -7,7 +7,7 @@ public class MainApp
 	{
 		while (true)
 		{
-			if (BackEnd.CheckInternet() != true)
+			if (BackEnd.checkInternet() != true)
 			{
 				int temp = JOptionPane.showOptionDialog(null,
 						"You aren't connected to the Internet\nClick yes to try again", "Error 404",
