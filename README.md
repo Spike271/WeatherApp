@@ -13,7 +13,7 @@ This Weather App is yet another generic app which Javascript developer
 In the following project, I largely copied the code of @TapTap_196 on youtube. The purpose of this project is to learn how to call APIs and do so in Java.
 ## Screenshots
 
-![App Screenshot]src/main/AppScreenshot.png
+![App Screenshot] src/main/AppScreenshot.png
 
 ## Installation
 
