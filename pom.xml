@@ -11,11 +11,30 @@
 	</properties>
   
 <dependencies>
-  <dependency>
-	    <groupId>com.googlecode.json-simple</groupId>
-	    <artifactId>json-simple</artifactId>
-	    <version>1.1.1</version>
-	</dependency>
+	  <dependency>
+		    <groupId>com.googlecode.json-simple</groupId>
+		    <artifactId>json-simple</artifactId>
+		    <version>1.1.1</version>
+		</dependency>
+	
+		<dependency>
+			  <groupId>com.formdev</groupId>
+			  <artifactId>flatlaf</artifactId>
+			  <version>3.5.4</version>
+		</dependency>
+		
+		<dependency>
+			  <groupId>com.formdev</groupId>
+			  <artifactId>flatlaf-fonts-roboto</artifactId>
+			  <version>2.137</version>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/com.miglayout/miglayout-swing -->
+		<dependency>
+		    <groupId>com.miglayout</groupId>
+		    <artifactId>miglayout-swing</artifactId>
+		    <version>11.4.2</version>
+		</dependency>
 </dependencies>
 
 </project>

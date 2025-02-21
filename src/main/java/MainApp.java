@@ -1,5 +1,12 @@
+import java.awt.Font;
+
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
+import com.formdev.flatlaf.FlatLaf;
+import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
 public class MainApp
 {
@@ -18,14 +25,12 @@ public class MainApp
 			}
 			else
 			{
-				SwingUtilities.invokeLater(new Runnable() {
-					
-					@Override
-					public void run()
-					{
-						new AppGui().setVisible(true);
-					}
-				});
+				FlatLaf.registerCustomDefaultsSource("res.com.theme");
+				FlatRobotoFont.install();
+				UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.BOLD, 12));
+				FlatMacLightLaf.setup();
+				
+				SwingUtilities.invokeLater(() -> new AppGui().setVisible(true));
 				break;
 			}
 		}
