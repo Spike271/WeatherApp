@@ -6,11 +6,16 @@
 
 <h1 align="center">Weather App</h1>
 
+
 ## Description
 This Weather App is yet another generic app which Javascript developers make in their learning stage so the difference here is I use Java to make this app.
 
 
 In the following project, I largely copied the code of @TapTap_196 on youtube. The purpose of this project is to learn how to call APIs and do so in Java.
+
+
+[![Java CI with Maven (Multi-OS)](https://github.com/Spike271/WeatherApp/actions/workflows/maven.yml/badge.svg)](https://github.com/Spike271/WeatherApp/actions/workflows/maven.yml)
+
 ## Screenshots
 
 ![app screenshot](src/main/AppScreenshot.png "Weather app")
