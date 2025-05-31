@@ -1,4 +1,4 @@
-name: Java CI with Maven (Multi-OS)
+name: Building
 
 on:
   push:
