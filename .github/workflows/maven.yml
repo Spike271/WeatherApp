@@ -28,14 +28,14 @@ jobs:
       run: mvn -B package --file pom.xml
 
     - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: WeatherApp-Full-Package-${{ matrix.os }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: WeatherApp-Full-Package-${{ matrix.os }}
 
-          # Path can take multiple entries
-          path: |
-            target/*.jar
-            target/classes/res/
+        # Path can take multiple entries
+        path: |
+          target/*.jar
+          target/classes/res/
 
-          if-no-files-found: warn
+        if-no-files-found: warn
 
