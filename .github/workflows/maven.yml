@@ -27,15 +27,17 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
+    - name: Prepare Artifact Folder
+      run: |
+        mkdir -p staging
+        cp target/WeatherApp-1.0.0.jar staging/
+        cp -r target/classes/res staging/
+    
+
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: WeatherApp-Full-Package-${{ matrix.os }}
-
-        # Path can take multiple entries
-        path: |
-          target/*.jar
-          target/classes/res/
+        name: WeatherApp-${{ matrix.os }}
+        path: staging/
 
         if-no-files-found: warn
-

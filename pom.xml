@@ -24,7 +24,7 @@
 					  </goals>
 					  <configuration>
 						  <createDependencyReducedPom>false</createDependencyReducedPom>
-
+						  <shadedArtifactAttached>false</shadedArtifactAttached>
 						  <!-- ADD THIS FILTERS SECTION -->
 						  <filters>
 							  <filter>
