@@ -1,144 +1,130 @@
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
+
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URI;
-import java.net.UnknownHostException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Scanner;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import java.util.*;
 
 public class BackEnd
 {
-	@SuppressWarnings("unchecked")
-	public static JSONObject getWeatherData(String locationName)
+	public static Map<String, Object> getWeatherData(String locationName)
 	{
-		JSONArray locationData = getLocationData(locationName);
-		JSONObject location = (JSONObject) locationData.get(0);
+		Location location = getCoordinates(locationName);
 		
-		double latitude = (double) location.get("latitude");
-		double longitude = (double) location.get("longitude");
+		double latitude = location.latitude;
+		double longitude = location.longitude;
+
+        if (latitude == 0.0 && longitude == 0.0) return new HashMap<>();
 		
-		String urlString = "https://api.open-meteo.com/v1/forecast?latitude=" + latitude + "&longitude=" + longitude
-				+ "&hourly=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&timezone=Asia%2FTokyo";
-		
+		String urlString = """
+                https://api.open-meteo.com/v1/forecast?\
+                latitude=%.2f\
+                &longitude=%.2f\
+                &hourly=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&timezone=Asia%%2FKolkata\
+                """.formatted(latitude, longitude);
 		try
 		{
-			HttpURLConnection conn = fetchApiResponse(urlString);
-			if (conn.getResponseCode() != 200)
-			{
-				System.out.println("Cannot connect to the API");
-				return null;
-			}
+            WeatherResponse response = getWeather(urlString);
+            if (response == null) return new HashMap<>();
 			
-			StringBuilder resultJson = new StringBuilder();
-			Scanner scanner = new Scanner(conn.getInputStream());
-			if (scanner.hasNext())
-			{
-				resultJson.append(scanner.nextLine());
-			}
-			
-			scanner.close();
-			conn.disconnect();
-			
-			JSONParser parser = new JSONParser();
-			JSONObject resultJsonObject = (JSONObject) parser.parse(String.valueOf(resultJson));
-			JSONObject hourly = (JSONObject) resultJsonObject.get("hourly");
-			JSONArray time = (JSONArray) hourly.get("time");
+			Hourly hourly = response.hourly;
+			List<String> time = hourly.time;
 			int index = findIndexOfCurrentTime(time);
-			
-			JSONArray temperatureData = (JSONArray) hourly.get("temperature_2m");
-			double tempearture = (double) temperatureData.get(index);
-			
-			JSONArray weatherCode = (JSONArray) hourly.get("weather_code");
-			String weatherCondition = convertWeatherCode((long) weatherCode.get(index));
-			
-			JSONArray relativeHumidity = (JSONArray) hourly.get("relative_humidity_2m");
-			long humidity = (long) relativeHumidity.get(index);
-			
-			JSONArray windSpeedData = (JSONArray) hourly.get("wind_speed_10m");
-			double windSpeed = (double) windSpeedData.get(index);
-			
-			JSONObject weatherData = new JSONObject();
-			weatherData.put("temperature", tempearture);
-			weatherData.put("weather_condition", weatherCondition);
-			weatherData.put("humidity", humidity);
-			weatherData.put("windspeed", windSpeed);
-			return weatherData;
+
+            return getStringObjectMap(hourly, index);
 		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		catch (Exception _) {}
 		
-		return null;
+		return new HashMap<>();
 	}
-	
-	private static JSONArray getLocationData(String locationName)
+
+    private static Map<String, Object> getStringObjectMap(Hourly hourly, int index)
+    {
+        List<Double> temperatureData = hourly.temperature2m;
+        double temperature = temperatureData.get(index);
+
+        List<Integer> weatherCode = hourly.weatherCode;
+        String weatherCondition = convertWeatherCode((long) weatherCode.get(index));
+
+        List<Integer> relativeHumidity = hourly.relativeHumidity2m;
+        long humidity = (long) relativeHumidity.get(index);
+
+        List<Double> windSpeedData = hourly.windSpeed10m;
+        double windSpeed = windSpeedData.get(index);
+
+        Map<String, Object> weatherData = new HashMap<>();
+        weatherData.put("temperature", temperature);
+        weatherData.put("weather_condition", weatherCondition);
+        weatherData.put("humidity", humidity);
+        weatherData.put("windspeed", windSpeed);
+        return weatherData;
+    }
+
+    static Location getCoordinates(String locationName)
 	{
 		locationName = locationName.replaceAll(" ", "+");
-		String urlString = "https://geocoding-api.open-meteo.com/v1/search?name=" + locationName
-				+ "&count=10&language=en&format=json";
-		
-		try
-		{
-			HttpURLConnection conn = fetchApiResponse(urlString);
-			if (conn.getResponseCode() != 200)
-			{
-				System.out.println("Cannot find the data\nPlease try again later");
-			}
-			else
-			{
-				StringBuilder resultJSON = new StringBuilder();
-				Scanner scanner = new Scanner(conn.getInputStream());
-				while (scanner.hasNext())
-				{
-					resultJSON.append(scanner.nextLine());
-				}
-				scanner.close();
-				conn.disconnect();
-				
-				JSONParser parser = new JSONParser();
-				JSONObject resultJsonObject = (JSONObject) parser.parse(String.valueOf(resultJSON));
-				
-				JSONArray locationData = (JSONArray) resultJsonObject.get("results");
-				return locationData;
-			}
-		}
-		catch (Exception e)
-		{
-			System.out.println("Unable to fetch the Api");
-		}
-		return null;
+		String urlString = """
+                https://geocoding-api.open-meteo.com/v1/search?name=%s&count=1&language=en&format=json\
+                """.formatted(locationName);
+
+        GeoResponse data = getLocation(urlString)
+                .orElse(new GeoResponse(new ArrayList<>()));
+
+        return data.results.getFirst();
 	}
+
+    static WeatherResponse getWeather(String urlString)
+    {
+        Gson gson = new Gson();
+        HttpResponse<String> response = callApi(urlString);
+
+        if (response == null) return null;
+        return gson.fromJson(response.body(), WeatherResponse.class);
+    }
 	
-	private static HttpURLConnection fetchApiResponse(String urlString)
+	private static Optional<GeoResponse> getLocation(String urlString)
 	{
-		try
-		{
-			URI url = URI.create(urlString);
-			HttpURLConnection con = (HttpURLConnection) url.toURL().openConnection();
-			con.setRequestMethod("GET");
-			con.connect();
-			return con;
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		return null;
+        Gson gson = new Gson();
+        HttpResponse<String> response = callApi(urlString);
+
+        if (response == null) return Optional.empty();
+        return Optional.of(gson.fromJson(response.body(), GeoResponse.class));
 	}
+
+    private static HttpResponse<String> callApi(String urlString)
+    {
+        try
+        {
+            HttpRequest getRequest = HttpRequest.newBuilder()
+                    .uri(new URI(urlString))
+                    .GET()
+                    .build();
+
+            try (HttpClient httpClient = HttpClient.newHttpClient())
+            {
+                return httpClient.send(getRequest, BodyHandlers.ofString());
+            }
+        }
+        catch (Exception e) {
+            System.err.println("Something went wrong!\n" + e);
+        }
+        return null;
+    }
 	
-	private static int findIndexOfCurrentTime(JSONArray timeList)
+	private static int findIndexOfCurrentTime(List<String> timeList)
 	{
 		String currentTime = getCurrentTime();
-		
+
 		for (int i = 0; i < timeList.size(); i++)
 		{
-			String time = (String) timeList.get(i);
+			String time = timeList.get(i);
 			if (time.equalsIgnoreCase(currentTime))
 			{
 				return i;
@@ -151,8 +137,7 @@ public class BackEnd
 	{
 		LocalDateTime currentDateTime = LocalDateTime.now();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:00");
-		String formattedDateTime = currentDateTime.format(formatter);
-		return formattedDateTime;
+        return currentDateTime.format(formatter);
 	}
 	
 	private static String convertWeatherCode(long weatherCode)
@@ -183,11 +168,22 @@ public class BackEnd
 			if (address.isReachable(5000))
 				check = true;
 		}
-		catch (UnknownHostException e)
-		{}
-		catch (IOException e)
-		{}
+		catch (IOException _) {}
 		return check;
 	}
-	
+
+    record GeoResponse(List<Location> results) {}
+
+    record Location(double latitude, double longitude) {}
+
+    record WeatherResponse(Hourly hourly) {}
+
+    // Hourly data record
+    record Hourly(
+            List<String> time,
+            @SerializedName("temperature_2m") List<Double> temperature2m,
+            @SerializedName("relative_humidity_2m") List<Integer> relativeHumidity2m,
+            @SerializedName("weather_code") List<Integer> weatherCode,
+            @SerializedName("wind_speed_10m") List<Double> windSpeed10m
+    ) {}
 }

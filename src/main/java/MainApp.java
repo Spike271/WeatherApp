@@ -14,11 +14,11 @@ public class MainApp
 	{
 		while (true)
 		{
-			if (BackEnd.checkInternet() != true)
+			if (!BackEnd.checkInternet())
 			{
 				int temp = JOptionPane.showOptionDialog(null,
 						"You aren't connected to the Internet\nClick yes to try again", "Error 404",
-						JOptionPane.OK_OPTION, 2, null, null, 1);
+                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, 1);
 				
 				if (temp != 0)
 					break;
